@@ -1,0 +1,73 @@
+{% extends 'recipemanager/base.html' %}
+
+{% block title %}
+        Create ingredient
+{% endblock %}
+
+
+{% block body %}
+
+<h1>create ingredient</h1>
+
+
+{% if success %}
+<div class="alert alert-success" role="alert">{{ success }}</div>
+<a href="{% url 'recipemanager:ingredient_list' %}" class="btn btn-outline-primary btn-lg" role="button"
+   aria-pressed="true">
+    View ingredient list
+</a>
+<a href="{% url 'recipemanager:ingredient_create' %}" class="btn btn-outline-primary btn-lg" role="button"
+   aria-pressed="true">
+    Create another ingredient
+</a>
+
+{% else %}
+    <form action="{% url 'recipemanager:ingredient_create' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group form-row">
+            <label for="ingredient-name">Name</label>
+            <input name="name" type="text" class="form-control" id="ingredient-name" required
+                   value="{{ form_data.name }}">
+        </div>
+        <div class="form-group form-row">
+            <label for="ingredient-ean">EAN</label>
+            <input name="ean" type="text" class="form-control" id="ingredient-ean" required
+                   value="{{ form_data.ean}}">
+        </div>
+        <div class="form-group form-row">
+            <div class="form-group">
+                <label for="ingredient-amount">Item amount</label>
+                <input name="amount" type="text" class="form-control" id="ingredient-amount"
+                       required value="{{ form_data.amount}}">
+            </div>
+            <div class="form-group">
+                <label for="ingredient-unit">Unit</label>
+                <select name="unit" id="ingredient-unit" class="form-control"
+                        value="{{form_data.unit}}">
+                    <option selected>grams</option>
+                    <option>kilograms</option>
+                    <option>liter</option>
+                    <option>centiliter</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group form-row">
+            <label for="ingredient-price">Price (€)</label>
+            <input name="price" type="text" class="form-control" id="ingredient-price"
+                   required value="{{ form_data.price}}">
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> {{ error }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-primary">save</button>
+    </form>
+{% endif %}
+
+{% endblock %}

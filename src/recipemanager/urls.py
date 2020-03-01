@@ -2,6 +2,8 @@ from django.urls import path
 
 from . import views
 
+app_name = 'recipemanager'
+
 urlpatterns = [
     path('', views.index, name='index'),
     path('ingredient/', views.ingredient_list, name='ingredient_list'),
