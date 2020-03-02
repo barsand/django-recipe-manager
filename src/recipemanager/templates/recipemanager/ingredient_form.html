@@ -1,15 +1,3 @@
-{% extends 'recipemanager/base.html' %}
-
-{% block title %}
-        Create ingredient
-{% endblock %}
-
-
-{% block body %}
-
-<h1>create ingredient</h1>
-
-
 {% if success %}
 <div class="alert alert-success" role="alert">{{ success }}</div>
 <a href="{% url 'recipemanager:ingredient_list' %}" class="btn btn-outline-primary btn-lg" role="button"
@@ -22,7 +10,7 @@
 </a>
 
 {% else %}
-    <form action="{% url 'recipemanager:ingredient_create' %}" method="post">
+    <form action="{{request.path}}" method="post">
         {% csrf_token %}
         <div class="form-group form-row">
             <label for="ingredient-name">Name</label>
@@ -52,7 +40,7 @@
             </div>
         </div>
         <div class="form-group form-row">
-            <label for="ingredient-price">Price (€)</label>
+            <label for="ingredient-price">Price (&euro;)</label>
             <input name="price" type="text" class="form-control" id="ingredient-price"
                    required value="{{ form_data.price}}">
         </div>
@@ -69,5 +57,3 @@
         <button type="submit" class="btn btn-primary">save</button>
     </form>
 {% endif %}
-
-{% endblock %}

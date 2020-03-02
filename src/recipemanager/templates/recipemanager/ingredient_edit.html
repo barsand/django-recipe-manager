@@ -1,0 +1,28 @@
+{% extends 'recipemanager/base.html' %}
+
+{% block title %}
+    Edit ingredient
+{% endblock %}
+
+
+{% block body %}
+
+<h1>Editing ingredient</h1>
+
+{% if form_data or success %}
+    {% include 'recipemanager/ingredient_form.html' %}
+
+{% else %}
+    <div class="alert alert-danger" role="alert">Unable to fetch ingredient with provided EAN.</div>
+    <a href="{% url 'recipemanager:ingredient_list' %}" class="btn btn-outline-primary btn-lg" role="button"
+       aria-pressed="true">
+        View ingredient list
+    </a>
+    <a href="{% url 'recipemanager:ingredient_create' %}" class="btn btn-outline-primary btn-lg" role="button"
+       aria-pressed="true">
+        Create another ingredient
+    </a>
+{% endif %}
+
+
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'recipemanager/base.html' %}
+
+{% block title %}
+    List ingredients
+{% endblock %}
+
+
+{% block body %}
+
+<div class="row">
+    <h1>ingredients</h1>
+
+    <a href="{% url 'recipemanager:ingredient_create' %}"
+       class="btn btn-success btn-lg"
+       role="button"
+       aria-pressed="true">
+        <i class="fa fa-plus-circle"></i>
+    </a>
+</div>
+
+<table id="ingredients_tb" class="display">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>EAN</th>
+            <th>Amount</th>
+            <th>Price</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in ingredients %}
+            <tr>
+                <td>{{ i.name }}</td>
+                <td>{{ i.ean }}</td>
+                <td>{{ i.amount }} {{ i.unit }}</td>
+                <td>&euro; {{ i.price }}</td>
+                <td>
+                    <a href="{% url 'recipemanager:ingredient_edit' ingredient_id=i.ean %}">
+                        <i class="fa fa-pencil"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'recipemanager:ingredient_delete' ingredient_id=i.ean %}">
+                        <i class="fa fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}
+{% block scripts %}
+<script>
+    $(document).ready( function () {
+        $('#ingredients_tb').DataTable();
+    } );
+</script>
+{% endblock %}
