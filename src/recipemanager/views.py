@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from .controllers import IngredientManager
+from .controllers import IngredientManager, RecipeManager
 
 
 def index(request):
@@ -25,3 +25,10 @@ def ingredient_edit(request, ingredient_id):
 def ingredient_delete(request, ingredient_id):
     return IngredientManager.delete(request, ingredient_id)
 
+
+def recipe_list(request):
+    return RecipeManager.list(request)
+
+
+def recipe_create(request):
+    return RecipeManager.create(request)

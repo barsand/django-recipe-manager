@@ -20,7 +20,9 @@
         <div class="form-group form-row">
             <label for="ingredient-ean">EAN</label>
             <input name="ean" type="text" class="form-control" id="ingredient-ean" required
-                   value="{{ form_data.ean}}">
+                   value="{{ form_data.ean }}" minlength=13 maxlength=13
+                   {% if 'edit' in request.path %} disabled {% endif %}
+                   >
         </div>
         <div class="form-group form-row">
             <div class="form-group">
@@ -32,10 +34,12 @@
                 <label for="ingredient-unit">Unit</label>
                 <select name="unit" id="ingredient-unit" class="form-control"
                         value="{{form_data.unit}}">
-                    <option selected>grams</option>
-                    <option>kilograms</option>
-                    <option>liter</option>
-                    <option>centiliter</option>
+                    <option
+                        {% if not form_data or form_data.unit == 'grams' %} selected {% endif %}
+                    >grams</option>
+                    <option {% if form_data.unit == 'kilograms' %} selected {% endif %}>kilograms</option>
+                    <option {% if form_data.unit == 'liter' %} selected {% endif %}>liter</option>
+                    <option {% if form_data.unit == 'centiliter' %} selected {% endif %}>centiliter</option>
                 </select>
             </div>
         </div>

@@ -1,0 +1,85 @@
+{% extends 'recipemanager/base.html' %}
+
+{% block title %}Create recipe{% endblock %}
+
+{% block head %}
+<style>
+#recipe-listing tbody > tr {
+    display: none;
+}
+</style>
+{% endblock %}
+
+{% block scripts%}
+<script>
+    function display2required(display_attr) {
+        if (display_attr == 'none') return false
+        else return true
+    }
+
+    function get_parent(element_id, parent_tag) {
+        element = $('#' + element_id);
+        parent_el = null
+        Array.from(element.parents()).forEach(function (el) {
+            if (el.tagName  == parent_tag) {
+                parent_el = el;
+                return
+            }
+        });
+        return parent_el;
+    }
+
+    function swap_row_visibility(clicked_element, affected_element) {
+        var parent_table = null, parent_row= null;
+        console.log(clicked_element);
+        clicked_element_parent_table = get_parent(clicked_element.id, 'TABLE')
+        clicked_element_parent_row = get_parent(clicked_element.id, 'TR')
+        affected_element_parent_table = get_parent(affected_element.id, 'TABLE')
+        affected_element_parent_row = get_parent(affected_element.id, 'TR')
+
+        var clicked_attr_value = null;
+        var affected_attr_value = null;
+        if (clicked_element_parent_table.id == 'recipe-listing') {
+            if (!clicked_element.checked) {
+                console.log('b');
+                clicked_attr_value = 'none';
+                affected_attr_value = 'table-row';
+            }
+        }
+        else if (clicked_element_parent_table.id == 'standby-listing') {
+            if (clicked_element.checked) {
+                clicked_attr_value = 'none';
+                affected_attr_value = 'table-row';
+            }
+        }
+        clicked_element_parent_row.style.display = clicked_attr_value;
+        affected_element_parent_row.style.display = affected_attr_value;
+    }
+
+    $(document).ready( function () {
+        $('#standby-listing').DataTable();
+
+        $('.checkbox-toggler').click(function() {
+            var current_class = null, clicked_element = this;
+            this.className.split(' ').forEach(function (c) {
+                if (c.slice(0, 4) == 'ean-') {
+                    current_ean_class = c;
+                }
+            });
+
+            Array.from(document.getElementsByClassName(current_ean_class)).forEach(function (checkbox) {
+                if(checkbox.id != clicked_element.id){
+                    checkbox.checked = clicked_element.checked;
+                    swap_row_visibility(clicked_element, checkbox);
+                }
+            });
+        });
+    } );
+
+</script>
+{% endblock %}
+
+{% block body %}
+    <h1>create recipe</h1>
+    {% include 'recipemanager/recipe_form.html' %}
+{% endblock %}

@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.db.models import Q
-from .models import Ingredient
+from .models import Ingredient, Recipe, RecipeListing
 import collections
 import json
 
@@ -12,7 +12,7 @@ def ingredient_already_exists(ean, name):
         return False
 
 def parse_valid_form_data(request, model):
-    model_fields = [f.get_attname() for f in model._meta.get_fields()]
+    model_fields = [f.attname for f in model._meta.fields]
     parsed_form_data = dict()
     for field in request.POST:
         if field in model_fields:
@@ -23,7 +23,6 @@ class IngredientManager():
     def list(request):
         ingredients = Ingredient.objects.all()
         return render(request, 'recipemanager/ingredient_list.html', {'ingredients': ingredients})
-
 
     def create(request):
         if request.method == 'GET':
@@ -72,3 +71,39 @@ class IngredientManager():
             return render(request, 'recipemanager/ingredient_delete.html')
 
 
+class RecipeManager():
+    def list(request):
+        return HttpResponse('list!')
+
+    def create(request):
+        if request.method == 'GET':
+            ingredients = Ingredient.objects.all()
+            return render(request, 'recipemanager/recipe_create.html', {'ingredients': ingredients})
+        if request.method == 'POST':
+            recipe_eans = list()
+            for field in request.POST:
+                if field[:20] == 'ingredient-selected-':
+                    recipe_eans.append(field[20:])
+
+            recipe_ingredients = list()
+            ean2quantity = dict()
+            recipe_cost = 0
+            for ean in recipe_eans:
+                ingredient = Ingredient.objects.filter(ean=ean)[0]
+                recipe_ingredients.append(ingredient)
+                curr_quantity = float(request.POST['%s-item-quantity' % ean])
+                ean2quantity[ean] = curr_quantity
+
+                recipe_cost += curr_quantity/float(ingredient.amount)*float(ingredient.price)
+
+            recipe = Recipe(name=request.POST['name'], cost=recipe_cost)
+            recipe.save()
+
+            for ean in recipe_eans:
+                listing = RecipeListing(recipe_id=recipe.id,
+                                        ingredient_id=ean,
+                                        ingredient_quantity=ean2quantity[ean])
+
+            success_msg = 'Successfully created recipe #%s: %s.' % (recipe.id, recipe.name)
+            return render(
+                    request, 'recipemanager/recipe_create.html', {'success': success_msg})
