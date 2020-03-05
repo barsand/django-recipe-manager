@@ -18,6 +18,10 @@ def ingredient_edit(request, ingredient_id):
     return IngredientManager.edit(request, ingredient_id)
 
 
+def ingredient_confirm_delete(request, ingredient_id):
+    return IngredientManager.confirm_delete(request, ingredient_id)
+
+
 def ingredient_delete(request, ingredient_id):
     return IngredientManager.delete(request, ingredient_id)
 

@@ -66,9 +66,21 @@ class IngredientManager():
             else:
                 return render(request, 'recipemanager/ingredient_edit.html', {'success': 'Nothing changed!'})
 
+    def confirm_delete(request, ingredient_id):
+        ingredient = Ingredient.objects.filter(ean=ingredient_id)[0]
+        listings = RecipeListing.objects.filter(ingredient=ingredient)
+        return render(request, 'recipemanager/ingredient_confirm_delete.html',
+                {'ingredient': ingredient, 'listings': listings})
+
     def delete(request, ingredient_id):
+        ingredient = Ingredient.objects.filter(ean=ingredient_id)[0]
+        listings = RecipeListing.objects.filter(ingredient=ingredient)
+        for l in listings:
+            l.recipe.cost -= l.ingredient_quantity / l.ingredient.amount * l.ingredient.price
+            l.recipe.save()
+            l.delete()
         try:
-            Ingredient.objects.filter(ean=ingredient_id)[0].delete()
+            ingredient.delete()
             return render(request, 'recipemanager/ingredient_delete.html', {
                 'success': 'Sucessfully deleted ingredient #%s.' % ingredient_id})
         except Exception as exp:

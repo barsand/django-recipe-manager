@@ -1,0 +1,53 @@
+{% extends 'recipemanager/base.html' %}
+
+{% block title %}
+    Edit ingredient
+{% endblock %}
+
+
+{% block body %}
+
+<h1>Warning</h1>
+
+<div class="alert alert-warning" role="alert">
+    <p>You are about to remove ingredient #{{ ingredient.ean }}: {{ ingredient.name }}.</p>
+
+    {% if listings %}
+        <p>The following recipes use this ingredients and will be affected:</p>
+        {% for l in listings %}
+            <p>- {{ l.recipe.name }}</p>
+        {% endfor  %}
+    {% endif %}
+
+    <p>do you want to proceed?</p>
+    <a href="{% url 'recipemanager:ingredient_delete' ingredient_id=ingredient.ean %}"
+       class="btn btn-danger btn-lg"
+       role="button"
+       aria-pressed="true">
+        yes
+    </a>
+    <a href="{% url 'recipemanager:ingredient_list' %}"
+       class="btn btn-success btn-lg"
+       role="button"
+       aria-pressed="true">
+       no
+    </a>
+
+</div>
+
+
+<a href="{% url 'recipemanager:ingredient_list' %}"
+   class="btn btn-outline-primary btn-lg"
+   role="button"
+   aria-pressed="true">
+    View ingredient list
+</a>
+
+<a href="{% url 'recipemanager:ingredient_create' %}"
+   class="btn btn-outline-primary btn-lg"
+   role="button"
+   aria-pressed="true">
+    Create an ingredient
+</a>
+
+{% endblock %}
