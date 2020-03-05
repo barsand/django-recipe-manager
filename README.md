@@ -4,7 +4,7 @@
 From a Django-enabled environment, run:
 ```sh
 $ cd src
-$ python3 manage.py makemigrations
+$ python3 manage.py makemigrations recipemanager
 $ python3 manage.py migrate
 ```
 Then, just run the application:
