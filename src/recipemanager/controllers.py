@@ -19,6 +19,10 @@ def parse_ingredient_form_data(request, model):
             parsed_form_data[field] = request.POST[field]
     return parsed_form_data
 
+def render_homepage(request):
+    return render(request, 'recipemanager/home.html')
+
+
 class IngredientManager():
     def list(request):
         ingredients = Ingredient.objects.all()

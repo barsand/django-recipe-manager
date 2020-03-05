@@ -1,9 +1,9 @@
 from django.http import HttpResponse
-from .controllers import IngredientManager, RecipeManager
+from .controllers import IngredientManager, RecipeManager, render_homepage
 
 
 def index(request):
-    return HttpResponse('aloha!')
+    return render_homepage(request)
 
 
 def ingredient_list(request):
