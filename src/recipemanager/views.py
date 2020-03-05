@@ -14,10 +14,6 @@ def ingredient_create(request):
     return IngredientManager.create(request)
 
 
-def ingredient_view(request, ingredient_id):
-    return HttpResponse('viewing %s' % ingredient_id)
-
-
 def ingredient_edit(request, ingredient_id):
     return IngredientManager.edit(request, ingredient_id)
 
@@ -32,3 +28,16 @@ def recipe_list(request):
 
 def recipe_create(request):
     return RecipeManager.create(request)
+
+
+def recipe_view(request, recipe_id):
+    return RecipeManager.view(request, recipe_id)
+
+
+def recipe_edit(request, recipe_id):
+    return RecipeManager.edit(request, recipe_id)
+
+
+def recipe_delete(request, recipe_id):
+    return RecipeManager.delete(request, recipe_id)
+

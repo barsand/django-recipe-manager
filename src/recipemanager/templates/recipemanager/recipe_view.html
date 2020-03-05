@@ -1,0 +1,58 @@
+{% extends 'recipemanager/base.html' %}
+{% load static %}
+
+{% block title %}View recipe{% endblock %}
+
+{% block body %}
+    <h1>{{ recipe.name }}</h1>
+    <h2>&euro; {{ recipe.cost }}</h2>
+
+    <a href="{% url 'recipemanager:recipe_edit' recipe_id=recipe.id%}"
+       class="btn btn-primary btn-lg"
+       role="button"
+       aria-pressed="true">
+        <r class="fa fa-pencil"></i>
+    </a>
+
+    <a href="{% url 'recipemanager:recipe_delete' recipe_id=recipe.id%}"
+       class="btn btn-danger btn-lg"
+       role="button"
+       aria-pressed="true">
+        <r class="fa fa-trash"></i>
+    </a>
+
+    <table id="recipe-listing" class="table">
+        <thead class="thead-light">
+            <th>EAN</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Unit cost</th>
+        </thead>
+        {% for l in listings %}
+        <tr>
+            <td>{{ l.ingredient.ean }}</td>
+            <td>{{ l.ingredient.name }}</td>
+            <td>&euro; {{ l.ingredient.price }} per {{ l.ingredient.amount }} {{ l.ingredient.unit }}</td>
+            <td>{{ l.ingredient_quantity }} {{ l.ingredient.unit }}</td>
+            <td>&euro; {{ l.unit_cost }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Total: &euro; {{ recipe.cost }}</td>
+        </tr>
+    </table>
+
+
+    <a href="{% url 'recipemanager:recipe_list' %}" class="btn btn-outline-primary btn-lg" role="button"
+       aria-pressed="true">
+        Return to recipes
+    </a>
+
+
+
+{% endblock %}

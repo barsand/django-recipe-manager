@@ -1,0 +1,30 @@
+{% extends 'recipemanager/base.html' %}
+
+{% block title %}
+    Edit
+{% endblock %}
+
+{% block scripts %}
+    {% include 'recipemanager/recipe_form.js' %}
+{% endblock %}
+
+{% block body %}
+
+<h1>Editing recipe</h1>
+
+{% if form_data or success %}
+    {% include 'recipemanager/recipe_form.html' %}
+
+{% else %}
+    <div class="alert alert-danger" role="alert">Unable to edit recipe.</div>
+    <a href="{% url 'recipemanager:recipe' %}" class="btn btn-outline-primary btn-lg" role="button"
+       aria-pressed="true">
+        View recipe list
+    </a>
+    <a href="{% url 'recipemanager:recipe' %}" class="btn btn-outline-primary btn-lg" role="button"
+       aria-pressed="true">
+        Creat another recipe
+    </a>
+{% endif %}
+
+{% endblock %}

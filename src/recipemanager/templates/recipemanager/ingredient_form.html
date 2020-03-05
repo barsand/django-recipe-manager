@@ -33,7 +33,8 @@
             <div class="form-group">
                 <label for="ingredient-unit">Unit</label>
                 <select name="unit" id="ingredient-unit" class="form-control"
-                        value="{{form_data.unit}}">
+                        value="{{form_data.unit}}"
+                        {% if 'edit' in request.path %} disabled {% endif %}>
                     <option
                         {% if not form_data or form_data.unit == 'grams' %} selected {% endif %}
                     >grams</option>

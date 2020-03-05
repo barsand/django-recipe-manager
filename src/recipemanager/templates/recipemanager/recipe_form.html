@@ -10,7 +10,7 @@
 </a>
 
 {% else %}
-    <form action="{% url 'recipemanager:recipe_create' %}" method="post">
+    <form action="{{request.path}}" method="post">
         {% csrf_token %}
         <div class="form-group form-row">
             <label for="recipe-name">Name</label>
@@ -34,13 +34,20 @@
                 </th>
             </thead>
             {% for i in ingredients%}
-            <tr id="{{ i.ean }}-recipe-listing">
+            <tr id="{{ i.ean }}-recipe-listing"
+                {% if i.ean in listings %}
+                style="display: table-row"
+                {% else %}
+                style="display: none"
+                {% endif %}
+                >
                 <td>{{ i.ean }}</td>
                 <td>{{ i.name }}</td>
                 <td>&euro; {{ i.price }} per {{ i.amount }} {{ i.unit }}</td>
                 <td>
                     <div class="input-group">
-                        <input type="text" name="{{ i.ean }}-item-quantity" class="form-control" aria-describedby="input-group-prepend" >
+                        <input type="text" name="{{ i.ean }}-item-quantity" class="form-control" aria-describedby="input-group-prepend"
+                               value="{{ i.curr_recipe_quantity  }}" id="quantity-{{ i.ean }}">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="input-group-prepend">{{ i.unit }}</span>
                         </div>
@@ -49,6 +56,9 @@
                 <td>
                     <div class="input-group">
                         <input type="checkbox"
+                               {% if i.ean in listings %}
+                               checked
+                               {% endif %}
                                id="recipe-listing-checkbox-{{ i.ean }}"
                                name="ingredient-selected-{{ i.ean }}"
                                class="checkbox-toggler recipe-listing-checkbox ean-{{ i.ean }}">
@@ -91,7 +101,11 @@
                             <th>Name</th>
                         </thead>
                         {% for i in ingredients%}
-                        <tr id="{{ i.ean }}-standby-listing">
+                        <tr id="{{ i.ean }}-standby-listing"
+                            {% if i.ean in listings %}
+                            style="display: none"
+                            {% endif %}
+                            >
                             <td>
                                 <input type="checkbox"
                                        id="standby-listing-checkbox-{{ i.ean }}"
