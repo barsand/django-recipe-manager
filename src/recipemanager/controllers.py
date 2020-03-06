@@ -19,6 +19,23 @@ def parse_ingredient_form_data(request, model):
             parsed_form_data[field] = request.POST[field]
     return parsed_form_data
 
+def update_recipe_cost(recipe):
+    listings = RecipeListing.objects.filter(recipe=recipe)
+    recipe_cost = 0
+    for l in listings:
+        recipe_cost += l.ingredient_quantity / l.ingredient.amount * l.ingredient.price
+    recipe.cost = recipe_cost
+    recipe.save()
+
+def chain_ingredient_update(updated_ingredient):
+    listings = RecipeListing.objects.filter(ingredient=updated_ingredient)
+    recipes = set()
+    for l in listings:
+        recipes.add(l.recipe)
+
+    for r in recipes:
+        update_recipe_cost(r)
+
 def render_homepage(request):
     return render(request, 'recipemanager/home.html')
 
@@ -45,6 +62,7 @@ class IngredientManager():
             except Exception as exp:
                 return HttpResponse(status=500)
 
+            chain_ingredient_update(ingredient)
             success_msg = {'success': 'Ingredient created!'}
             return render(request, 'recipemanager/ingredient_create.html', success_msg)
 
@@ -61,6 +79,7 @@ class IngredientManager():
                     setattr(ingredient, field, form_value)
                     updated_fields += 1
             ingredient.save()
+            chain_ingredient_update(ingredient)
             if updated_fields:
                 return render(request, 'recipemanager/ingredient_edit.html', {'success': 'Ingredient updated!'})
             else:
@@ -81,6 +100,7 @@ class IngredientManager():
             l.delete()
         try:
             ingredient.delete()
+            chain_ingredient_update(ingredient)
             return render(request, 'recipemanager/ingredient_delete.html', {
                 'success': 'Sucessfully deleted ingredient #%s.' % ingredient_id})
         except Exception as exp:
@@ -180,8 +200,10 @@ class RecipeManager():
                     new_listing.save()
                 if ean not in ean2form_data and ean in ean2listings:
                     ean2listings[ean].delete()
-        msg = {'success': 'Sucessfully updated recipe #%s: %s.' % (recipe_id, recipe.name)}
-        return render(request, 'recipemanager/recipe_edit.html', msg)
+
+            update_recipe_cost(recipe)
+            msg = {'success': 'Sucessfully updated recipe #%s: %s.' % (recipe_id, recipe.name)}
+            return render(request, 'recipemanager/recipe_edit.html', msg)
 
     def delete(request, recipe_id):
         recipe = Recipe.objects.filter(id=recipe_id)[0]
