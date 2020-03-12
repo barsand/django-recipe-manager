@@ -62,7 +62,6 @@ class IngredientManager():
             except Exception as exp:
                 return HttpResponse(status=500)
 
-            chain_ingredient_update(ingredient)
             success_msg = {'success': 'Ingredient created!'}
             return render(request, 'recipemanager/ingredient_create.html', success_msg)
 
